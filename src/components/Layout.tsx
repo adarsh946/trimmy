@@ -4,10 +4,8 @@ import Header from "./Header";
 function Layout({ children }: PropsWithChildren) {
   return (
     <div>
-      <header>
+      <main className="container min-h-screen mx-auto px-16 py-6">
         <Header />
-      </header>
-      <main className="container min-h-screen mx-auto px-4 py-8">
         {children}
       </main>
 
