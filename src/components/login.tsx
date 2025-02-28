@@ -16,7 +16,7 @@ import Error from "./Error";
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState({});
+  const [error, setError] = useState<Record<string, string>>({});
 
   const login = { email, password };
 
