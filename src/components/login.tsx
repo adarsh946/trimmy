@@ -8,17 +8,40 @@ import {
 } from "@/components/ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import * as yup from "yup";
 import Error from "./Error";
+import { useFetch } from "@/hooks/useFetch";
+import { login } from "@/database/apiAuth";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { AuthState } from "@/context";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<Record<string, string>>({});
 
-  const login = { email, password };
+  const navigate = useNavigate();
+  let [searchParams] = useSearchParams();
+  const extendedLink = searchParams.get("createUrl");
+
+  const loginData = { email, password };
+
+  const {
+    data,
+    loading,
+    errors,
+    fn: fnLogin,
+  } = useFetch(login, { email, password });
+  const { fetchUser } = AuthState();
+
+  useEffect(() => {
+    if (errors === null && data) {
+      navigate(`/dashboard?${extendedLink ? `createUrl=${extendedLink}` : ""}`);
+      fetchUser();
+    }
+  }, [data, errors]);
 
   const handleLogin = async () => {
     try {
@@ -33,8 +56,11 @@ function Login() {
           .required(),
       });
 
-      await loginSchema.validate(login, { abortEarly: false });
+      await loginSchema.validate(loginData, { abortEarly: false });
       setError({});
+
+      // API Call
+      fnLogin();
     } catch (error) {
       if (error instanceof yup.ValidationError) {
         const newError: Record<string, string> = {};
@@ -83,7 +109,7 @@ function Login() {
 
       <CardFooter className="flex flex-col items-center">
         <Button onClick={handleLogin} className="w-full text-md">
-          {false ? <BeatLoader size={10} /> : "Login"}
+          {loading ? <BeatLoader size={10} /> : "Login"}
         </Button>
       </CardFooter>
     </Card>
