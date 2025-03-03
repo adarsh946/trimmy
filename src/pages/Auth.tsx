@@ -1,11 +1,12 @@
 import Login from "@/components/login";
+import Signup from "@/components/signup";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchParams } from "react-router-dom";
 
 function Auth() {
   const [params] = useSearchParams();
   return (
-    <div className="flex flex-col items-center gap-10 mt-36">
+    <div className="flex flex-col items-center gap-10 ">
       <h2 className=" text-5xl text-center text-white font- font-extrabold">
         {params.get("createUrl")
           ? "Holdup you need to Login First"
@@ -20,7 +21,9 @@ function Auth() {
         <TabsContent value="Login">
           <Login />
         </TabsContent>
-        <TabsContent value="Signup">SignUp component</TabsContent>
+        <TabsContent value="Signup">
+          <Signup />
+        </TabsContent>
       </Tabs>
     </div>
   );
