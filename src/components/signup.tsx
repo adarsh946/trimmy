@@ -64,7 +64,7 @@ function Signup() {
 
       //api call
 
-      fnFetch();
+      await fnFetch();
     } catch (error) {
       if (error instanceof yup.ValidationError) {
         const newError: Record<string, string> = {};
