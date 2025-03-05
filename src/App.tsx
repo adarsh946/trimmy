@@ -7,6 +7,7 @@ import RedirectLink from "./pages/RedirectLink";
 import Auth from "./pages/Auth";
 import Layout from "./components/Layout";
 import { AuthProvider } from "./context";
+import RequiredAuth from "./components/RequiredAuth";
 
 function App() {
   return (
@@ -16,8 +17,12 @@ function App() {
           <Layout>
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/link/:id" element={<Link />} />
+              <RequiredAuth>
+                <Route path="/dashboard" element={<Dashboard />} />
+              </RequiredAuth>
+              <RequiredAuth>
+                <Route path="/link/:id" element={<Link />} />
+              </RequiredAuth>
               <Route path="/:id" element={<RedirectLink />} />
               <Route path="/auth" element={<Auth />} />
             </Routes>

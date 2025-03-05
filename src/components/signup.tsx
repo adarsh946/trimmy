@@ -22,7 +22,7 @@ function Signup() {
     name: "",
     email: "",
     password: "",
-    profile_pic: "",
+    profile_pic: null,
   });
 
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ function Signup() {
   const handleSignup = async () => {
     setError({});
     try {
-      const signupSchema = yup.object().shape({
+      const signupSchema = yup.object({
         name: yup.string().required("Name is Required!"),
         email: yup
           .string()
@@ -60,11 +60,13 @@ function Signup() {
           .required("Mandatory field"),
         profile_pic: yup.mixed(),
       });
+
       await signupSchema.validate(formData, { abortEarly: false });
 
       //api call
 
       await fnFetch();
+      console.log("111111111111");
     } catch (error) {
       if (error instanceof yup.ValidationError) {
         const newError: Record<string, string> = {};
@@ -76,6 +78,7 @@ function Signup() {
             }
           });
           setError(newError);
+          console.log("111111111111");
         }
       }
     }
@@ -133,7 +136,7 @@ function Signup() {
 
       <CardFooter className="flex flex-col items-center">
         <Button onClick={handleSignup} className="w-full text-md">
-          {loading ? <BeatLoader size={10} /> : "Login"}
+          {loading ? <BeatLoader size={10} /> : "SignUp"}
         </Button>
       </CardFooter>
     </Card>

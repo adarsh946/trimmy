@@ -7,7 +7,7 @@ type fetchCallback<T> = (
 
 export const useFetch = <T>(
   cb: fetchCallback<T>,
-  options: Record<string, string> = {}
+  options: Record<string, any> = {}
 ) => {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
