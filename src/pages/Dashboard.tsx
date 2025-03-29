@@ -1,32 +1,75 @@
+import Error from "@/components/Error";
+import LinkCard from "@/components/linkCard";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { AuthState } from "@/context";
+import { getClicks } from "@/database/apiClicks";
+import { getUrls } from "@/database/apiUrl";
+import { useFetch } from "@/hooks/useFetch";
 import { Filter } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BarLoader } from "react-spinners";
 
 function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
 
+  const { user } = AuthState();
+
+  const {
+    loading,
+    data: urls,
+    fn: fnUrls,
+    errors,
+  } = useFetch(getUrls, user?.id);
+  const {
+    loading: loadingClicks,
+    data: clicks,
+    fn: fnClicks,
+  } = useFetch(
+    getClicks,
+    urls?.map((url) => url.id)
+  );
+
+  useEffect(() => {
+    fnUrls();
+  }, []);
+
+  const filteredUrls = urls?.filter((url) =>
+    url.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  useEffect(() => {
+    if (urls?.length) {
+      fnClicks();
+    }
+  }, [urls?.length]);
+
   return (
     <div className="flex flex-col gap-8">
-      {true && <BarLoader width={"100%"} color="#36d7b7" />}
+      {loading ||
+        (loadingClicks && <BarLoader width={"100%"} color="#36d7b7" />)}
       <div className="grid grid-cols-2 gap-4">
         <Card>
           <CardHeader>
-            <CardTitle>Card Title</CardTitle>
+            <CardTitle>Links Created</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>Card Content</p>
+            <p>0</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Card Title</CardTitle>
+            <CardTitle>Total Clicks</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>Card Content</p>
+            <p>0</p>
           </CardContent>
         </Card>
+      </div>
+      <div className="flex justify-between">
+        <h1 className="text-5xl font-extrabold">My Links</h1>
+        <Button>Create Link</Button>
       </div>
       <div className="relative">
         <Input
@@ -37,6 +80,10 @@ function Dashboard() {
         />
         <Filter className="absolute top-2 right-2 p-1" />
       </div>
+      {errors && <Error message={errors?.message} />}
+      {(filteredUrls || []).map((url, i) => (
+        <LinkCard key={i} url={url} fetchUrls={fnUrls} />
+      ))}
     </div>
   );
 }
