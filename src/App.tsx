@@ -17,12 +17,24 @@ function App() {
           <Layout>
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              {/* <RequiredAuth> */}
-              <Route path="/dashboard" element={<Dashboard />} />
-              {/* </RequiredAuth> */}
-              {/* <RequiredAuth> */}
-              <Route path="/link/:id" element={<Link />} />
-              {/* </RequiredAuth> */}
+
+              <Route
+                path="/dashboard"
+                element={
+                  <RequiredAuth>
+                    <Dashboard />
+                  </RequiredAuth>
+                }
+              />
+              <Route
+                path="/link/:id"
+                element={
+                  <RequiredAuth>
+                    <Link />
+                  </RequiredAuth>
+                }
+              />
+
               <Route path="/:id" element={<RedirectLink />} />
               <Route path="/auth" element={<Auth />} />
             </Routes>

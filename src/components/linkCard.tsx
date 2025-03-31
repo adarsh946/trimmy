@@ -1,5 +1,9 @@
 function LinkCard({ url, fetchUrls }) {
-  return <div>LinkCard</div>;
+  return (
+    <div>
+      <img src={url?.qr} alt="qr code" />
+    </div>
+  );
 }
 
 export default LinkCard;
